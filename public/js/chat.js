@@ -37,6 +37,17 @@ socket.on( 'disconnect', function(){
 	console.log( 'Disconnected from server' );
 });
 
+socket.on( 'updateUserList', function( users ){
+
+	var ol = jQuery( '<ol></ol>' );
+
+	users.forEach( function( user ){
+		ol.append( jQuery( '<li>' + user + '</li>' ) );
+	});
+
+	jQuery( '#users' ).html( ol );
+});
+
 socket.on( 'newMessage', function( message ){
 	console.log( message );
 
