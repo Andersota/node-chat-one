@@ -31,7 +31,10 @@ socket.on( 'newLocationMessage', function( message ){
 	jQuery( '#messages' ).append( li );
 });
 
-jQuery( '#message-form' ).on( 'submit', function( event ){
+
+var messageForm = jQuery( '#message-form' );
+
+messageForm.on( 'submit', function( event ){
 
 	event.preventDefault();
 
@@ -42,9 +45,11 @@ jQuery( '#message-form' ).on( 'submit', function( event ){
 		text : messageEl.val()
 	},
 	function( data ){
-		console.log( 'Got it ' + data.text );
+		messageEl.val( '' );
 	});
 });
+
+
 
 var locationButton = jQuery( '#location-button' );
 
@@ -56,7 +61,11 @@ locationButton.on( 'click', function( event ){
 		return;
 	}
 
+	locationButton.attr( 'disabled', 'disabled' ).text( 'Sending Location...' );
+
 	navigator.geolocation.getCurrentPosition( function( position ){
+
+		locationButton.removeAttr( 'disabled' ).text( 'Send Location' );
 
 		socket.emit( 'createLocationMessage', {
 			latitude : position.coords.latitude,
@@ -65,6 +74,6 @@ locationButton.on( 'click', function( event ){
 	},
 	function(){
 		alert( 'Unable to find location' );
+		locationButton.removeAttr( 'disabled' ).text( 'Send Location' )
 	});
-
 });
